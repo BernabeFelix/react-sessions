@@ -139,13 +139,19 @@ class App extends Component {
 
   componentDidMount() {
     const socket = socketIOClient(ENDPOINT);
-
-
-    // TODO: Update the state.date only if the date.temperature is different
     // Use functional state
 
-    socket.on("FromAPI", (data) => {
-      this.setState(() => data);
+    socket.on("FromAPI", ({data}) => {
+      console.log(data)
+      this.setState((prevState) => {
+
+        if(!prevState.data
+          || prevState.data.temperature !== data.temperature) {
+            return ({data})
+        }
+
+          return ({data: prevState.data})
+      });
     });
   }
 
