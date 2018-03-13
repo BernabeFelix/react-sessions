@@ -121,10 +121,8 @@ class App extends Component {
     this.state = {
       data: null,
       principal: 'temperature',
-      hasError: false
     };
     this.updatePrincipal = this.updatePrincipal.bind(this);
-    this.closeModal= this.closeModal.bind(this);
   }
 
   updatePrincipal(value) {
@@ -142,7 +140,6 @@ class App extends Component {
     // Use functional state
 
     socket.on("FromAPI", ({data}) => {
-      console.log(data)
       this.setState((prevState) => {
 
         if(!prevState.data
@@ -155,26 +152,12 @@ class App extends Component {
     });
   }
 
-  componentDidCatch(){
-    this.setState({hasError: true})
-  }
-
-  closeModal(){
-    console.log('close modal')
-    this.setState({hasError: false})
-  }
-
   render() {
-    const { data, principal, hasError } = this.state;
-
-    console.log('hasError: ', hasError)
+    const { data, principal} = this.state;
 
     return (
       <AppStyled>
-          {hasError
-              ? <InformationModal open={hasError} onClick={this.closeModal}/>
-              : <Information data={data} principal={principal} onClick={this.updatePrincipal} />
-          }
+          <Information data={data} principal={principal} onClick={this.updatePrincipal} />
       </AppStyled>
     );
   }
