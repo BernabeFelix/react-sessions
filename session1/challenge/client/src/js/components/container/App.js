@@ -32,7 +32,7 @@ const DataList = ({ data, loading, onClick, principal}) => {
   const items = loading ? FAKE_DATA : data;
 
   return Object.keys(items).map(key =>
-          <TileErrorBoundary>
+          <TileErrorBoundary key={key}>
               <DataTile value={items[key]}
                         name={key}
                         onClick={onClick}
@@ -43,7 +43,6 @@ const DataList = ({ data, loading, onClick, principal}) => {
 }
 
 const InformationModal = ({ open, onClick, children }) => {
-  // TODO: Create a Portal component and wrap a modal
   // Create the portal on the ../presentational/ModalPortal.js file
 
   const modal = (
