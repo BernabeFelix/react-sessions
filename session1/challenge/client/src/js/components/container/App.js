@@ -12,7 +12,10 @@ import { FAKE_DATA, ENDPOINT } from './constants';
 const transformKey = (text) => text.replace(/([a-z](?=[A-Z]))/g, '$1 ');
 
 const DataTile = ({ name, value, loading, active, onClick }) => {
-  // TODO: Throw an error if the value is less than 1
+    if(value < 1) {
+      throw new Error('Value is less than 1')
+    }
+
   return (
     <DataTileStyled
       loading={loading}
@@ -42,12 +45,14 @@ const InformationModal = ({ open, onClick, children }) => {
   // Create the portal on the ../presentational/ModalPortal.js file
 
   const modal = (
-      <Modal open={open} onClick={onClick}>
-        {children}
-      </Modal>
+      <Portal>
+          <Modal open={open} onClick={onClick}>
+              {children}
+          </Modal>
+      </Portal>
   );
 
-  return null;
+  return modal;
 }
 
 class MainTile extends Component {
@@ -115,8 +120,10 @@ class App extends Component {
     this.state = {
       data: null,
       principal: 'temperature',
+      hasError: false
     };
     this.updatePrincipal = this.updatePrincipal.bind(this);
+    this.closeModal= this.closeModal.bind(this);
   }
 
   updatePrincipal(value) {
@@ -141,12 +148,26 @@ class App extends Component {
     });
   }
 
+  componentDidCatch(){
+    this.setState({hasError: true})
+  }
+
+  closeModal(){
+    console.log('close modal')
+    this.setState({hasError: false})
+  }
+
   render() {
-    const { data, principal } = this.state;
+    const { data, principal, hasError } = this.state;
+
+    console.log('hasError: ', hasError)
 
     return (
       <AppStyled>
-        <Information data={data} principal={principal} onClick={this.updatePrincipal} />
+          {hasError
+              ? <InformationModal open={hasError} onClick={this.closeModal}/>
+              : <Information data={data} principal={principal} onClick={this.updatePrincipal} />
+          }
       </AppStyled>
     );
   }
