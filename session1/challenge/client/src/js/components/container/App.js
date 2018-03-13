@@ -32,11 +32,13 @@ const DataList = ({ data, loading, onClick, principal}) => {
   const items = loading ? FAKE_DATA : data;
 
   return Object.keys(items).map(key =>
-          <DataTile value={items[key]}
-                name={key}
-                onClick={onClick}
-                loading={loading}
-                active={key === principal}/>
+          <TileErrorBoundary>
+              <DataTile value={items[key]}
+                        name={key}
+                        onClick={onClick}
+                        loading={loading}
+                        active={key === principal}/>
+          </TileErrorBoundary>
         )
 }
 
